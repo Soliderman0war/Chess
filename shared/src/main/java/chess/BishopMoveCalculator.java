@@ -29,11 +29,11 @@ public class BishopMoveCalculator {
             bishop_cols_left.add(col - j);
         }
         //Moving Up
-        for(int k = row + 1; k < 9; k++){
+        for(int k = row + 1; k <= 8; k++){
             bishop_rows_up.add(k);
         }
         //Moving Right
-        for(int l = col + 1; l < 9; l++){
+        for(int l = col + 1; l <= 8; l++){
             bishop_cols_right.add(l);
         }
         //Going through and matching down with left and right movements
