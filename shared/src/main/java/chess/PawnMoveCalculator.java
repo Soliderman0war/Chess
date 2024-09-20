@@ -12,10 +12,11 @@ public class PawnMoveCalculator{
         Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
+        boolean withinBounds = row >= 0 && row <= 7 && col >= 0 && col <= 7;
 
-        if(teamColor == ChessGame.TeamColor.BLACK) {
+        if(teamColor == ChessGame.TeamColor.BLACK && withinBounds) {
             System.out.println("Black");
-            if(board.getPiece(new ChessPosition(row - 1, col)) == null) {
+            if((board.getPiece(new ChessPosition(row - 1, col)) == null)) {
                 if (row == 7) {
                     // Check for initial position of black pawn and add two-square move
                     for (int i = 1; i < 3; i++) {
@@ -66,10 +67,10 @@ public class PawnMoveCalculator{
             }
         }
 
-        if(teamColor == ChessGame.TeamColor.WHITE) {
+        if(teamColor == ChessGame.TeamColor.WHITE && withinBounds) {
             System.out.println("White");
             ChessPosition piece_check = new ChessPosition(row + 1, col + 1);
-            if(board.getPiece(new ChessPosition(row + 1, col)) == null) {
+            if((board.getPiece(new ChessPosition(row + 1, col)) == null)) {
                 if (row == 2) {
                     for (int i = 1; i < 3; i++) {
                         if(board.getPiece(new ChessPosition(row + i, col)) == null){
