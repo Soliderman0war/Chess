@@ -44,16 +44,24 @@ public class ChessPiece {
     }
 
     @Override
+    public String toString() {
+        return "ChessPiece{" +
+                "pieceType=" + pieceType +
+                ", pieceColor=" + pieceColor +
+                '}';
+    }
+
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChessPiece that = (ChessPiece) o;
-        return getPieceType() == that.getPieceType() && pieceColor == that.pieceColor;
+        return pieceType == that.pieceType && pieceColor == that.pieceColor;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getPieceType(), pieceColor);
+        return Objects.hash(pieceType, pieceColor);
     }
 
     /**
@@ -83,7 +91,8 @@ public class ChessPiece {
            return bishop.BishopMoves(board, myPosition, getTeamColor());
        }
        else if(getPieceType() == PieceType.KNIGHT){
-           return null;
+           KnightMoveCalculator knight = new KnightMoveCalculator();
+           return knight.KnightMoves(board, myPosition, getTeamColor());
        }
        else if(getPieceType() == PieceType.ROOK){
            return null;

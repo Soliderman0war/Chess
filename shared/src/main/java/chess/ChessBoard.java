@@ -10,7 +10,12 @@ import java.util.Objects;
  * signature of the existing methods.
  */
 public class ChessBoard {
-    private ChessPiece[][] board = new ChessPiece[9][9];
+    @Override
+    public String toString() {
+        return "ChessBoard{" +
+                "board=" + Arrays.toString(board) +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -24,6 +29,8 @@ public class ChessBoard {
     public int hashCode() {
         return Arrays.deepHashCode(board);
     }
+
+    private ChessPiece[][] board = new ChessPiece[9][9];
 
     public ChessBoard() {
 //        ChessGame.TeamColor teamColor = ChessGame.TeamColor.WHITE;
