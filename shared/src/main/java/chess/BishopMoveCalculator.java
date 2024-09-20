@@ -14,6 +14,10 @@ public class BishopMoveCalculator {
         List<Integer> bishop_rows_up = new ArrayList<>();
         List<Integer> bishop_cols_left = new ArrayList<>();
         List<Integer> bishop_cols_right = new ArrayList<>();
+        boolean piece_blocking_down_r = false;
+        boolean piece_blocking_down_l = false;
+        boolean piece_blocking_up_r = false;
+        boolean piece_blocking_up_l = false;
 
         //Find all available moves
         //Moving Down
@@ -33,50 +37,86 @@ public class BishopMoveCalculator {
             bishop_cols_right.add(l);
         }
         //Going through and matching down with left and right movements
-        for(int i = 0; i < bishop_rows_down.size(); i++){
+        for(int i = 0; i < bishop_rows_down.size(); i++) {
+            System.out.println("New");
             System.out.println(bishop_rows_down.get(i));
-            if(i < bishop_cols_left.size()){
-                System.out.println(bishop_cols_left.get(i));
-                moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_down.get(i), bishop_cols_left.get(i)), null));
-            }
-            if(i < bishop_cols_right.size()){
-                System.out.println(bishop_cols_right.get(i));
-                moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_down.get(i), bishop_cols_right.get(i)), null));
-            }
+            if (i < bishop_cols_left.size() && !piece_blocking_down_l) {
 
-        }
-        for(int i = 0; i < bishop_rows_up.size(); i++){
-                System.out.println(bishop_rows_up.get(i));
-                if(i < bishop_cols_left.size()) {
+                ChessPosition piece_check_down_l = new ChessPosition(bishop_rows_down.get(i), bishop_cols_left.get(i));
+                //check if there's a piece
+                if (board.getPiece(piece_check_down_l) == null) {
+                    System.out.println(bishop_cols_left.get(i));
+                    moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_down.get(i), bishop_cols_left.get(i)), null));
+                } else {
+                    //return true if foe and return false if friend  then clears all continuing moves
+                    if (FriendOrFoe(board.getPiece(piece_check_down_l).getTeamColor(), teamColor)) {
+                        System.out.println(bishop_cols_left.get(i));
+                        moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_down.get(i), bishop_cols_left.get(i)), null));
+                    }
+                    piece_blocking_down_l = true;
+                }
+            }
+                if (i < bishop_cols_right.size() && !piece_blocking_down_r) {
+                    ChessPosition piece_check_down_r = new ChessPosition(bishop_rows_down.get(i), bishop_cols_right.get(i));
                     //check if there's a piece
-                    if (Chess(new ChessPosition(bishop_rows_up.get(i), bishop_cols_left.get(i))) != null) {
-
+                    if (board.getPiece(piece_check_down_r) == null) {
+                        System.out.println(bishop_cols_right.get(i));
+                        moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_down.get(i), bishop_cols_right.get(i)), null));
                     } else {
+                        //return true if foe and return false if friend  then clears all continuing moves
+                        if (FriendOrFoe(board.getPiece(piece_check_down_r).getTeamColor(), teamColor)) {
+                            System.out.println(bishop_cols_right.get(i));
+                            moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_down.get(i), bishop_cols_right.get(i)), null));
+                        }
+                        piece_blocking_down_r = true;
+                    }
+                }
+        }
+            //Get moves Up then (Left and Right)
+        for(int i = 0; i < bishop_rows_up.size(); i++){
+                System.out.println("New");
+                System.out.println(bishop_rows_up.get(i));
+                if(i < bishop_cols_left.size() && !piece_blocking_up_l) {
+                    ChessPosition piece_check = new ChessPosition(bishop_rows_up.get(i), bishop_cols_left.get(i));
+                    //check if there's a piece
+                    if (board.getPiece(piece_check) == null) {
                         System.out.println(bishop_cols_left.get(i));
                         moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_up.get(i), bishop_cols_left.get(i)), null));
+                    } else {
+                        //return true if foe and return false if friend  then clears all continuing moves
+                        if (FriendOrFoe(board.getPiece(piece_check).getTeamColor(), teamColor)) {
+                            System.out.println(bishop_cols_left.get(i));
+                            moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_up.get(i), bishop_cols_left.get(i)), null));
+                        }
+                        piece_blocking_up_l = true;
                     }
-                    if (i < bishop_cols_right.size()) {
-                        System.out.println(bishop_cols_right.get(i));
-                        moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_up.get(i), bishop_cols_right.get(i)), null));
-                    }
-
+                }
+                    
+                    if (i < bishop_cols_right.size() && !piece_blocking_up_r) {
+                        ChessPosition piece_check_up_r = new ChessPosition(bishop_rows_up.get(i), bishop_cols_right.get(i));
+                        //check if there's a piece
+                        if(board.getPiece(piece_check_up_r) == null) {
+                            System.out.println(bishop_cols_right.get(i));
+                            moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_up.get(i), bishop_cols_right.get(i)), null));
+                        }
+                        else{
+                            //return true if foe and return false if friend  then clears all continuing moves
+                            if(FriendOrFoe(board.getPiece(piece_check_up_r).getTeamColor(),teamColor)) {
+                                System.out.println(bishop_cols_right.get(i));
+                                moves.add(new ChessMove(myPosition, new ChessPosition(bishop_rows_up.get(i), bishop_cols_right.get(i)), null));
+                            }
+                            piece_blocking_up_r = true;
+                        }
                 }
 
-
-            }
+                }
 
 
 
         return moves;
     }
 
-    public boolean IsMyPiece(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor teamColor) {
-        if(ChessPiece.getTeamColor() == teamColor) {
-
-        }
-    }
-
-    public boolean IsEnemy(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor teamColor) {
-        if() {}
+    public boolean FriendOrFoe(ChessGame.TeamColor their_color, ChessGame.TeamColor our_color) {
+        return their_color != our_color;
     }
 }
