@@ -1,17 +1,19 @@
-// Create a new file named Pawn.java
+
 package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
 
-public class Pawn {
+public class PawnMoveCalculator{
 
-    public Collection<ChessMove> getPawnMoves(ChessBoard board, ChessPosition myPosition) {
+
+
+    public Collection<ChessMove> PawnMoveCalculator(ChessBoard board, ChessPosition myPosition, ChessGame.TeamColor teamColor) {
         Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
-        if(getTeamColor() == ChessGame.TeamColor.BLACK) {
+        if(teamColor == ChessGame.TeamColor.BLACK) {
             System.out.println("Black");
             if(row == 7) {
                 // Check for initial position of black pawn and add two-square move
@@ -20,8 +22,8 @@ public class Pawn {
                 }
             } else if ((row - 1) == 1) {
                 // PROMOTION TIME!!
-                for (PieceType piece : PieceType.values()) {
-                    if(piece != PieceType.KING && piece != PieceType.PAWN) {
+                for (ChessPiece.PieceType piece : ChessPiece.PieceType.values()) {
+                    if(piece != ChessPiece.PieceType.KING && piece != ChessPiece.PieceType.PAWN) {
                         moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), piece));
                     }
                 }
@@ -35,7 +37,7 @@ public class Pawn {
             // If there are pieces to the corners, it can eat them
             if (board.getPiece(new ChessPosition(row - 1, col - 1)) != null) {
                 if ((row - 1) == 1) {
-                    for (PieceType piece : PieceType.values()) {
+                    for (ChessPiece.PieceType piece : ChessPiece.PieceType.values()) {
                         moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col - 1), piece));
                     }
                 } else {
@@ -44,7 +46,7 @@ public class Pawn {
             }
             if (board.getPiece(new ChessPosition(row - 1, col + 1)) != null) {
                 if ((row - 1) == 1) {
-                    for (PieceType piece : PieceType.values()) {
+                    for (ChessPiece.PieceType piece : ChessPiece.PieceType.values()) {
                         moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col + 1), piece));
                     }
                 } else {
@@ -53,7 +55,7 @@ public class Pawn {
             }
         }
 
-        if(getTeamColor() == ChessGame.TeamColor.WHITE) {
+        if(teamColor == ChessGame.TeamColor.WHITE) {
             System.out.println("White");
             if(row == 2) {
                 for (int i = 0; i < 2; i++) {
@@ -61,8 +63,8 @@ public class Pawn {
                 }
             } else if ((row + 1) == 8) {
                 // PROMOTION TIME!!
-                for (PieceType piece : PieceType.values()) {
-                    if(piece != PieceType.KING && piece != PieceType.PAWN) {
+                for (ChessPiece.PieceType piece : ChessPiece.PieceType.values()) {
+                    if(piece != ChessPiece.PieceType.KING && piece != ChessPiece.PieceType.PAWN) {
                         moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), piece));
                     }
                 }
@@ -74,9 +76,5 @@ public class Pawn {
         }
 
         return moves;
-    }
-
-    private ChessGame.TeamColor getTeamColor() {
-        return ChessGame.TeamColor.WHITE;
     }
 }
