@@ -18,6 +18,7 @@ public class BishopMoveCalculator {
         boolean piece_blocking_down_l = false;
         boolean piece_blocking_up_r = false;
         boolean piece_blocking_up_l = false;
+        boolean withinBounds = row >= 0 && row <= 7 && col >= 0 && col <= 7;
 
         //Find all available moves
         //Moving Down
@@ -40,7 +41,7 @@ public class BishopMoveCalculator {
         for(int i = 0; i < bishop_rows_down.size(); i++) {
             System.out.println("New");
             System.out.println(bishop_rows_down.get(i));
-            if (i < bishop_cols_left.size() && !piece_blocking_down_l) {
+            if (i < bishop_cols_left.size() && !piece_blocking_down_l && withinBounds) {
 
                 ChessPosition piece_check_down_l = new ChessPosition(bishop_rows_down.get(i), bishop_cols_left.get(i));
                 //check if there's a piece
@@ -56,7 +57,7 @@ public class BishopMoveCalculator {
                     piece_blocking_down_l = true;
                 }
             }
-                if (i < bishop_cols_right.size() && !piece_blocking_down_r) {
+                if (i < bishop_cols_right.size() && !piece_blocking_down_r && withinBounds) {
                     ChessPosition piece_check_down_r = new ChessPosition(bishop_rows_down.get(i), bishop_cols_right.get(i));
                     //check if there's a piece
                     if (board.getPiece(piece_check_down_r) == null) {
@@ -76,7 +77,7 @@ public class BishopMoveCalculator {
         for(int i = 0; i < bishop_rows_up.size(); i++){
                 System.out.println("New");
                 System.out.println(bishop_rows_up.get(i));
-                if(i < bishop_cols_left.size() && !piece_blocking_up_l) {
+                if(i < bishop_cols_left.size() && !piece_blocking_up_l && withinBounds) {
                     ChessPosition piece_check = new ChessPosition(bishop_rows_up.get(i), bishop_cols_left.get(i));
                     //check if there's a piece
                     if (board.getPiece(piece_check) == null) {
@@ -92,7 +93,7 @@ public class BishopMoveCalculator {
                     }
                 }
                     
-                    if (i < bishop_cols_right.size() && !piece_blocking_up_r) {
+                    if (i < bishop_cols_right.size() && !piece_blocking_up_r && withinBounds) {
                         ChessPosition piece_check_up_r = new ChessPosition(bishop_rows_up.get(i), bishop_cols_right.get(i));
                         //check if there's a piece
                         if(board.getPiece(piece_check_up_r) == null) {
