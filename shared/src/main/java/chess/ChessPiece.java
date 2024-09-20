@@ -51,11 +51,15 @@ public class ChessPiece {
      * @return Collection of valid moves
      */
    public Collection<ChessMove> PawnMoves(ChessBoard board, ChessPosition myPosition) {
-        ArrayList<ChessMove> moves = new ArrayList<>();
+        Collection<ChessMove> moves = new ArrayList<>();
         int row = myPosition.getRow();
         int col = myPosition.getColumn();
 
-        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.BLACK){
+
+
+
+        if(getTeamColor() == ChessGame.TeamColor.BLACK){
+            System.out.println("Black");
             if(row == 6) {
                 // Check for initial position of black pawn and add two-square move
                 moves.add(new ChessMove(myPosition, new ChessPosition(row - 1, col), null));
@@ -69,13 +73,16 @@ public class ChessPiece {
         }
 
 
-        if(board.getPiece(myPosition).getTeamColor() == ChessGame.TeamColor.WHITE){
+        if(getTeamColor() == ChessGame.TeamColor.WHITE){
+            System.out.println("White");
             if(row == 1) {
                 moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), null));
                 moves.add(new ChessMove(myPosition, new ChessPosition(row + 2, col), null));
             }
             else{
                 moves.add(new ChessMove(myPosition, new ChessPosition(row + 1, col), null));
+                System.out.println(row+1);
+                System.out.println(col);
             }
         }
         return moves;
