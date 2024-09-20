@@ -70,7 +70,23 @@ public class ChessPiece {
            PawnMoveCalculator pawn = new PawnMoveCalculator();
            return pawn.PawnMoveCalculator(board, myPosition, getTeamColor());
        }
-       else {
+       else if(getPieceType() == PieceType.KING){
+           return null;
+       }
+       else if(getPieceType() == PieceType.QUEEN){
+           return null;
+       }
+       else if(getPieceType() == PieceType.BISHOP){
+           BishopMoveCalculator bishop = new BishopMoveCalculator();
+           return bishop.BishopMoves(board, myPosition, getTeamColor());
+       }
+       else if(getPieceType() == PieceType.KNIGHT){
+           return null;
+       }
+       else if(getPieceType() == PieceType.ROOK){
+           return null;
+       }
+       else{
            return null;
        }
     }
