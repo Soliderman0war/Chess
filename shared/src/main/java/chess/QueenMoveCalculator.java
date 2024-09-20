@@ -10,8 +10,13 @@ public class QueenMoveCalculator {
         Collection<ChessMove> moves = new ArrayList<>();
 
         //Call Bishop Moves
+        BishopMoveCalculator bishop = new BishopMoveCalculator();
+        moves.addAll(bishop.BishopMoves(board, myPosition, teamColor));
+
 
         //Call Rook Moves
+        RookMoveCalculator rook = new RookMoveCalculator();
+        moves.addAll(rook.RookMoves(board, myPosition, teamColor));
 
 
         return moves;

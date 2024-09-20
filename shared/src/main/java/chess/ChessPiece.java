@@ -84,7 +84,8 @@ public class ChessPiece {
            return king.KingMoves(board, myPosition, getTeamColor()) ;
        }
        else if(getPieceType() == PieceType.QUEEN){
-           return null;
+           QueenMoveCalculator queen = new QueenMoveCalculator();
+           return queen.QueenMoves(board, myPosition, getTeamColor());
        }
        else if(getPieceType() == PieceType.BISHOP){
            BishopMoveCalculator bishop = new BishopMoveCalculator();
@@ -95,7 +96,8 @@ public class ChessPiece {
            return knight.KnightMoves(board, myPosition, getTeamColor());
        }
        else if(getPieceType() == PieceType.ROOK){
-           return null;
+           RookMoveCalculator rook = new RookMoveCalculator();
+           return rook.RookMoves(board, myPosition, getTeamColor());
        }
        else{
            return null;
