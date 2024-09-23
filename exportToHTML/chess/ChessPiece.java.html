@@ -1,0 +1,119 @@
+<html>
+<head>
+<title>ChessPiece.java</title>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<style type="text/css">
+.s0 { color: #cf8e6d;}
+.s1 { color: #bcbec4;}
+.s2 { color: #bcbec4;}
+.s3 { color: #5f826b; font-style: italic;}
+.s4 { color: #68a67e; font-style: italic;}
+.s5 { color: #67a37c; font-style: italic;}
+.s6 { color: #7a7e85;}
+</style>
+</head>
+<body bgcolor="#1e1f22">
+<table CELLSPACING=0 CELLPADDING=5 COLS=1 WIDTH="100%" BGCOLOR="#606060" >
+<tr><td><center>
+<font face="Arial, Helvetica" color="#000000">
+ChessPiece.java</font>
+</center></td></tr></table>
+<pre><span class="s0">package </span><span class="s1">chess</span><span class="s2">;</span>
+
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Collection</span><span class="s2">;</span>
+<span class="s0">import </span><span class="s1">java</span><span class="s2">.</span><span class="s1">util</span><span class="s2">.</span><span class="s1">Objects</span><span class="s2">;</span>
+
+<span class="s3">/**</span>
+ <span class="s3">* Represents a single chess piece</span>
+ <span class="s3">* </span><span class="s4">&lt;p&gt;</span>
+ <span class="s3">* Note: You can add to this class, but you may not alter</span>
+ <span class="s3">* signature of the existing methods.</span>
+ <span class="s3">*/</span>
+<span class="s0">public class </span><span class="s1">ChessPiece </span><span class="s2">{</span>
+    <span class="s0">private final </span><span class="s1">ChessGame</span><span class="s2">.</span><span class="s1">TeamColor pieceColor</span><span class="s2">;</span>
+    <span class="s0">private final </span><span class="s1">ChessPiece</span><span class="s2">.</span><span class="s1">PieceType pieceType</span><span class="s2">;</span>
+    <span class="s0">public </span><span class="s1">ChessPiece</span><span class="s2">(</span><span class="s1">ChessGame</span><span class="s2">.</span><span class="s1">TeamColor pieceColor</span><span class="s2">, </span><span class="s1">ChessPiece</span><span class="s2">.</span><span class="s1">PieceType type</span><span class="s2">) {</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">pieceColor </span><span class="s2">= </span><span class="s1">pieceColor</span><span class="s2">;</span>
+        <span class="s0">this</span><span class="s2">.</span><span class="s1">pieceType </span><span class="s2">= </span><span class="s1">type</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* The various different chess piece options</span>
+     <span class="s3">*/</span>
+    <span class="s0">public enum </span><span class="s1">PieceType </span><span class="s2">{</span>
+        <span class="s1">KING</span><span class="s2">,</span>
+        <span class="s1">QUEEN</span><span class="s2">,</span>
+        <span class="s1">BISHOP</span><span class="s2">,</span>
+        <span class="s1">KNIGHT</span><span class="s2">,</span>
+        <span class="s1">ROOK</span><span class="s2">,</span>
+        <span class="s1">PAWN</span>
+    <span class="s2">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s5">@return </span><span class="s3">Which team this chess piece belongs to</span>
+     <span class="s3">*/</span>
+    <span class="s0">public </span><span class="s1">ChessGame</span><span class="s2">.</span><span class="s1">TeamColor getTeamColor</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">pieceColor</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* </span><span class="s5">@return </span><span class="s3">which type of chess piece this piece is</span>
+     <span class="s3">*/</span>
+    <span class="s0">public </span><span class="s1">PieceType getPieceType</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">pieceType</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public boolean </span><span class="s1">equals</span><span class="s2">(</span><span class="s1">Object o</span><span class="s2">) {</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s0">this </span><span class="s2">== </span><span class="s1">o</span><span class="s2">) </span><span class="s0">return true</span><span class="s2">;</span>
+        <span class="s0">if </span><span class="s2">(</span><span class="s1">o </span><span class="s2">== </span><span class="s0">null </span><span class="s2">|| </span><span class="s1">getClass</span><span class="s2">() != </span><span class="s1">o</span><span class="s2">.</span><span class="s1">getClass</span><span class="s2">()) </span><span class="s0">return false</span><span class="s2">;</span>
+        <span class="s1">ChessPiece that </span><span class="s2">= (</span><span class="s1">ChessPiece</span><span class="s2">) </span><span class="s1">o</span><span class="s2">;</span>
+        <span class="s0">return </span><span class="s1">pieceColor </span><span class="s2">== </span><span class="s1">that</span><span class="s2">.</span><span class="s1">pieceColor </span><span class="s2">&amp;&amp; </span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">that</span><span class="s2">.</span><span class="s1">pieceType</span><span class="s2">;</span>
+    <span class="s2">}</span>
+
+    <span class="s1">@Override</span>
+    <span class="s0">public int </span><span class="s1">hashCode</span><span class="s2">() {</span>
+        <span class="s0">return </span><span class="s1">Objects</span><span class="s2">.</span><span class="s1">hash</span><span class="s2">(</span><span class="s1">pieceColor</span><span class="s2">, </span><span class="s1">pieceType</span><span class="s2">);</span>
+    <span class="s2">}</span>
+
+    <span class="s3">/**</span>
+     <span class="s3">* Calculates all the positions a chess piece can move to</span>
+     <span class="s3">* Does not take into account moves that are illegal due to leaving the king in</span>
+     <span class="s3">* danger</span>
+     <span class="s3">*</span>
+     <span class="s3">* </span><span class="s5">@return </span><span class="s3">Collection of valid moves</span>
+     <span class="s3">*/</span>
+    <span class="s0">public </span><span class="s1">Collection</span><span class="s2">&lt;</span><span class="s1">ChessMove</span><span class="s2">&gt; </span><span class="s1">pieceMoves</span><span class="s2">(</span><span class="s1">ChessBoard board</span><span class="s2">, </span><span class="s1">ChessPosition myPosition</span><span class="s2">) {</span>
+        <span class="s6">//Go through each piece and moves</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">PieceType</span><span class="s2">.</span><span class="s1">PAWN</span><span class="s2">) {</span>
+            <span class="s1">PawnMoveCalculator pawn </span><span class="s2">= </span><span class="s0">new </span><span class="s1">PawnMoveCalculator</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">pawn</span><span class="s2">.</span><span class="s1">pawnMoves</span><span class="s2">(</span><span class="s1">board</span><span class="s2">, </span><span class="s1">myPosition</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">PieceType</span><span class="s2">.</span><span class="s1">KING</span><span class="s2">) {</span>
+            <span class="s1">KingMoveCalculator king </span><span class="s2">= </span><span class="s0">new </span><span class="s1">KingMoveCalculator</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">king</span><span class="s2">.</span><span class="s1">kingMoves</span><span class="s2">(</span><span class="s1">board</span><span class="s2">, </span><span class="s1">myPosition</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">PieceType</span><span class="s2">.</span><span class="s1">QUEEN</span><span class="s2">) {</span>
+            <span class="s1">QueenMoveCalculator queen </span><span class="s2">= </span><span class="s0">new </span><span class="s1">QueenMoveCalculator</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">queen</span><span class="s2">.</span><span class="s1">queenMove</span><span class="s2">(</span><span class="s1">board</span><span class="s2">, </span><span class="s1">myPosition</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">PieceType</span><span class="s2">.</span><span class="s1">BISHOP</span><span class="s2">) {</span>
+            <span class="s1">BishopMoveCalculator bishop </span><span class="s2">= </span><span class="s0">new </span><span class="s1">BishopMoveCalculator</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">bishop</span><span class="s2">.</span><span class="s1">bishopMoves</span><span class="s2">(</span><span class="s1">board</span><span class="s2">, </span><span class="s1">myPosition</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">PieceType</span><span class="s2">.</span><span class="s1">KNIGHT</span><span class="s2">) {</span>
+            <span class="s1">KnightMoveCalculator knight </span><span class="s2">= </span><span class="s0">new </span><span class="s1">KnightMoveCalculator</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">knight</span><span class="s2">.</span><span class="s1">knightMove</span><span class="s2">(</span><span class="s1">board</span><span class="s2">, </span><span class="s1">myPosition</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">if</span><span class="s2">(</span><span class="s1">pieceType </span><span class="s2">== </span><span class="s1">PieceType</span><span class="s2">.</span><span class="s1">ROOK</span><span class="s2">) {</span>
+            <span class="s1">RookMoveCalculator rook </span><span class="s2">= </span><span class="s0">new </span><span class="s1">RookMoveCalculator</span><span class="s2">();</span>
+            <span class="s0">return </span><span class="s1">rook</span><span class="s2">.</span><span class="s1">rookMove</span><span class="s2">(</span><span class="s1">board</span><span class="s2">, </span><span class="s1">myPosition</span><span class="s2">);</span>
+        <span class="s2">}</span>
+        <span class="s0">else</span><span class="s2">{</span>
+            <span class="s0">return null</span><span class="s2">;</span>
+        <span class="s2">}</span>
+    <span class="s2">}</span>
+<span class="s2">}</span>
+</pre>
+</body>
+</html>
