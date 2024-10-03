@@ -85,7 +85,14 @@ public class ChessGame {
      * @throws InvalidMoveException if move is invalid
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
-        throw new RuntimeException("Not implemented");
+        Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
+        if (validMoves.isEmpty()) {
+            throw new InvalidMoveException("No valid move");
+        }
+
+        if(teamColor == getTeamTurn()){
+
+        }
     }
 
     /**
