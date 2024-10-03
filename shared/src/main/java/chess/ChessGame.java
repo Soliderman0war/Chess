@@ -1,5 +1,6 @@
 package chess;
 
+import java.util.ArrayList;
 import java.util.Collection;
 /**
  * For a class that can manage a chess game, making moves on a board
@@ -11,6 +12,7 @@ public class ChessGame {
     private TeamColor teamColor;
 
     public ChessGame(TeamColor teamColor) {
+        setTeamTurn(TeamColor.WHITE); //Set beginning to White
         this.teamColor = teamColor;
     }
 
@@ -46,10 +48,29 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-        ChessBoard board = new ChessBoard(); //Need board for the pieceMoves function
+        ChessBoard board = getBoard(); // get board
+        ChessPiece thisPiece = board.getPiece(startPosition);
+        if (thisPiece == null) {
+            return null; //If there is no piece return null
+        }
         //Use piece move function to get the collection of validMoves for the position
 
-       return ChessPiece.pieceMoves(board, startPosition);
+        Collection<ChessMove> validMoves = new ArrayList<>();
+        Collection<ChessMove> possibleMoves = thisPiece.pieceMoves(board, startPosition);
+
+        for( ChessMove move : possibleMoves ) {
+            ChessPiece phantomPiece = board.getPiece(move.getEndPosition());
+            board.addPiece(startPosition, null);
+            board.addPiece(move.getEndPosition(), phantomPiece);
+            if(!isInCheck(thisPiece.getTeamColor())){
+                validMoves.add(move);
+            }
+            board.addPiece(move.getEndPosition(), phantomPiece);
+            board.addPiece(startPosition, thisPiece);
+
+        }
+
+       return validMoves;
 
 
 
