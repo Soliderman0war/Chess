@@ -107,6 +107,7 @@ public class ChessGame {
             else{
                 setTeamTurn(TeamColor.WHITE); //Otherwise it was Blacks turn and now it is Whites
             }
+
         }
     }
 
