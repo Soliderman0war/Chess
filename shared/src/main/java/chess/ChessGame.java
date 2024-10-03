@@ -1,7 +1,6 @@
 package chess;
 
 import java.util.Collection;
-
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -9,16 +8,17 @@ import java.util.Collection;
  * signature of the existing methods.
  */
 public class ChessGame {
+    private TeamColor teamColor;
 
-    public ChessGame() {
-
+    public ChessGame(TeamColor teamColor) {
+        this.teamColor = teamColor;
     }
 
     /**
      * @return Which team's turn it is
      */
     public TeamColor getTeamTurn() {
-        throw new RuntimeException("Not implemented");
+        return teamColor; //Returns teamColor
     }
 
     /**
@@ -27,7 +27,7 @@ public class ChessGame {
      * @param team the team whose turn it is
      */
     public void setTeamTurn(TeamColor team) {
-        throw new RuntimeException("Not implemented");
+        teamColor = team; //Sets teamColor to the team whose turn it is
     }
 
     /**
@@ -46,12 +46,16 @@ public class ChessGame {
      * startPosition
      */
     public Collection<ChessMove> validMoves(ChessPosition startPosition) {
-//        ChessPiece pieces = new ChessPiece();
-//
-//        if(startPosition != null){
-//
-        }
+        ChessBoard board = new ChessBoard(); //Need board for the pieceMoves function
+        //Use piece move function to get the collection of validMoves for the position
+
+       return ChessPiece.pieceMoves(board, startPosition);
+
+
+
+
     }
+
 
     /**
      * Makes a move in a chess game
