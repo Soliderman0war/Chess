@@ -91,7 +91,22 @@ public class ChessGame {
         }
 
         if(teamColor == getTeamTurn()){
-
+            ChessPiece movePiece = getBoard().getPiece(move.getEndPosition());
+            if(movePiece.getTeamColor() != teamColor){
+                throw new InvalidMoveException("Invalid move"); //Can't move other peoples pieces as backup
+            }
+            if(move.getPromotionPiece() != null){
+                movePiece = new ChessPiece(movePiece.getTeamColor(), move.getPromotionPiece());
+                //Put in the Promotion piece
+            }
+            getBoard().addPiece(move.getStartPosition(), null); //Remove piece
+            getBoard().addPiece(move.getEndPosition(), movePiece); //Add piece
+            if(getTeamTurn() == TeamColor.WHITE){
+                setTeamTurn(TeamColor.BLACK); //If last move was White then go to Black
+            }
+            else{
+                setTeamTurn(TeamColor.WHITE); //Otherwise it was Blacks turn and now it is Whites
+            }
         }
     }
 
