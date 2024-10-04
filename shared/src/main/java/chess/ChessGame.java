@@ -2,6 +2,8 @@ package chess;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Objects;
+
 /**
  * For a class that can manage a chess game, making moves on a board
  * <p>
@@ -123,7 +125,7 @@ public class ChessGame {
         //Check if King is in the other teamColor's moves
         //go through board and check for king
         ChessPosition myKing = null;
-        Collection<ChessMove> validMovesList= new ArrayList<>();
+        Collection<ChessMove> validMovesList = new ArrayList<>();
         for(int i = 1; i <= 8; i ++){
             //rows
             for(int j = 1; j <= 8; j ++ ){
@@ -145,6 +147,7 @@ public class ChessGame {
                 }
             }
         }
+
         
         //check list
         for(ChessMove move : validMovesList){
@@ -158,6 +161,7 @@ public class ChessGame {
 
     }
 
+
     /**
      * Determines if the given team is in checkmate
      *
@@ -169,6 +173,19 @@ public class ChessGame {
         return isInCheck(teamColor) && isInStalemate(teamColor);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return teamColor == chessGame.teamColor && Objects.equals(board, chessGame.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamColor, board);
+    }
+
     /**
      * Determines if the given team is in stalemate, which here is defined as having
      * no valid moves
@@ -177,7 +194,19 @@ public class ChessGame {
      * @return True if the specified team is in stalemate, otherwise false
      */
     public boolean isInStalemate(TeamColor teamColor) {
-        throw new RuntimeException("Not implemented");
+        //use the valid move list but this team if the teamcolor is itself and check if it is empty
+        Collection<ChessMove> validMovesList = new ArrayList<>();
+        for(int i = 1; i <= 8; i ++){
+            //rows
+            for(int j = 1; j <= 8; j ++ ){
+                //columns
+                if(board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
+                    validMovesList.addAll(validMoves(new ChessPosition(i, j))); //add those moves to the list
+                }
+            }
+        }
+
+        return validMovesList.isEmpty();
     }
 
     /**
