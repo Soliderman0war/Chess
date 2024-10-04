@@ -120,7 +120,10 @@ public class ChessGame {
      * @return True if the specified team is in check
      */
     public boolean isInCheck(TeamColor teamColor) {
-        //Check if King is in the enemypieces moves
+        //Check if King is in the other teamColor's moves
+        //go through board and check each pieces
+
+
     }
 
     /**
