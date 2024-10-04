@@ -205,7 +205,28 @@ public class ChessGame {
      */
     public boolean isInCheckmate(TeamColor teamColor) {
         //Check if no valid moves (which is stalemate) and if it is in Check
-        return isInCheck(teamColor) && isInStalemate(teamColor);
+        if (noValid(teamColor)) return false;
+
+        return isInCheck(teamColor);
+    }
+
+    private boolean noValid(TeamColor teamColor) {
+        Collection<ChessMove> validMovesList;
+        for(int i = 1; i <= 8; i ++){
+            //rows
+            for(int j = 1; j <= 8; j ++ ){
+                //columns
+                ChessPosition myPosition = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(myPosition);
+                if(piece != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
+                    validMovesList = validMoves(myPosition);
+                    if(validMovesList != null && !validMovesList.isEmpty()){
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 
     /**
@@ -217,24 +238,10 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         //use the valid move list but this team if the teamcolor is itself and check if it is empty
-        Collection<ChessMove> validMovesList;
-        for(int i = 1; i <= 8; i ++){
-            //rows
-            for(int j = 1; j <= 8; j ++ ){
-                //columns
-                ChessPosition myPosition = new ChessPosition(i, j);
-                ChessPiece piece = board.getPiece(myPosition);
-                if(piece != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
-                   validMovesList = validMoves(myPosition);
-                   if(validMovesList != null && !validMovesList.isEmpty()){
-                       return false;
-                   }
-                }
-            }
-        }
-
-        return true;
+        if (noValid(teamColor)) return false;
+        return !isInCheck(teamColor); //return false if in check otherwise true because checkmate possibility
     }
+
 
     /**
      * Sets this game's chessboard with a given board
