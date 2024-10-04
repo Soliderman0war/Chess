@@ -16,9 +16,13 @@ public class ChessGame {
 
     public ChessGame() {
         board = new ChessBoard(); //Get Board
-        board.resetBoard(); //Put pieces in
+
+        resetBoard(); // put pieces in
         setTeamTurn(TeamColor.WHITE); //Set beginning to White
-        teamColor = TeamColor.WHITE;
+    }
+
+    public void resetBoard(){
+        board.resetBoard();
     }
 
     /**
@@ -109,7 +113,7 @@ public class ChessGame {
         }
 
 
-        if(validMoves.contains(move) && teamColor == getTeamTurn()){
+        if(validMoves.contains(move) && getBoard().getPiece(move.getStartPosition()).getTeamColor() == getTeamTurn()){
             ChessPiece movePiece = getBoard().getPiece(move.getStartPosition());
             if(move.getPromotionPiece() != null){
                 movePiece = new ChessPiece(movePiece.getTeamColor(), move.getPromotionPiece());
