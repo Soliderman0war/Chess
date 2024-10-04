@@ -182,6 +182,7 @@ public class ChessGame {
 
             if(move.equals(getEnPassantMove())){
                 //take the pawn away if it was the enPassant move
+
                 System.out.println("here");
                 getBoard().addPiece(setUpMove().getEndPosition(), null) ;
             }
