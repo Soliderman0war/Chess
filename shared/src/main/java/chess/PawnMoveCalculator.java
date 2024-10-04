@@ -37,8 +37,10 @@ public class PawnMoveCalculator {
             if(board.getPiece(new ChessPosition(row + 1, col - 1)) != null){
                 moves.addAll(pawnWhiteAttackLeft(board, position, new ChessPosition(row + 1, col - 1)));
             }
-            if(board.getPiece(new ChessPosition(row + 1, col + 1)) != null){
-                moves.addAll(pawnWhiteAttackRight(board, position, new ChessPosition(row + 1, col + 1)));
+            if(col + 1 < 9) {
+                if (board.getPiece(new ChessPosition(row + 1, col + 1)) != null) {
+                    moves.addAll(pawnWhiteAttackRight(board, position, new ChessPosition(row + 1, col + 1)));
+                }
             }
         }
 
@@ -70,8 +72,10 @@ public class PawnMoveCalculator {
             if(board.getPiece(new ChessPosition(row - 1, col - 1)) != null){
                 moves.addAll(pawnBlackAttack(board, position, new ChessPosition(row - 1, col - 1)));
             }
-            if(board.getPiece(new ChessPosition(row - 1, col + 1)) != null){
-                moves.addAll(pawnBlackAttack(board, position, new ChessPosition(row - 1, col + 1)));
+            if(col + 1 < 9) {
+                if (board.getPiece(new ChessPosition(row - 1, col + 1)) != null) {
+                    moves.addAll(pawnBlackAttack(board, position, new ChessPosition(row - 1, col + 1)));
+                }
             }
         }
 

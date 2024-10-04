@@ -13,6 +13,8 @@ import java.util.Objects;
 public class ChessGame {
     private TeamColor teamColor;
     private ChessBoard board;
+    private ChessMove previousMove;
+    private ChessMove enPassantMove;
 
     public ChessGame() {
         board = new ChessBoard(); //Get Board
@@ -41,12 +43,41 @@ public class ChessGame {
         teamColor = team; //Sets teamColor to the team whose turn it is
     }
 
+    public ChessMove setUpMove(){
+        return previousMove; // gets previous move
+    }
+
+    public void setSetUpMove(ChessMove move){
+        previousMove = move; //sets previous move
+    }
+
+    public void setEnPassantMove(ChessMove move){
+        enPassantMove = move;
+    }
+
+    public ChessMove getEnPassantMove() {
+        return enPassantMove;
+    }
+
     /**
      * Enum identifying the 2 possible teams in a chess game
      */
     public enum TeamColor {
         WHITE,
         BLACK
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return teamColor == chessGame.teamColor && Objects.equals(board, chessGame.board) && Objects.equals(previousMove, chessGame.previousMove);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamColor, board, previousMove);
     }
 
     /**
@@ -66,18 +97,24 @@ public class ChessGame {
 
         Collection<ChessMove> validMoves = new ArrayList<>();
         Collection<ChessMove> possibleMoves = thisPiece.pieceMoves(board, startPosition);
+        if(enPassantMove(getTeamTurn(), startPosition) != null){
+            possibleMoves.add(enPassantMove(getTeamTurn(), startPosition));
+        }
         for( ChessMove move : possibleMoves ) {
             //If the piece moves does it check?
             ChessPiece phantomPiece = board.getPiece(move.getEndPosition());
             board.addPiece(move.getStartPosition(), null); //remove to see
             board.addPiece(move.getEndPosition(), thisPiece); //Place there to see if it blocks
             if(!isInCheck(thisPiece.getTeamColor())){
-//                System.out.println("Check");
                 validMoves.add(move);
+
             }
             board.addPiece(move.getEndPosition(), phantomPiece); //places back the piece if wasn't null
             board.addPiece(move.getStartPosition(), thisPiece);
         }
+
+
+
 
        return validMoves;
 
@@ -86,19 +123,46 @@ public class ChessGame {
 
     }
 
-
     @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessGame chessGame = (ChessGame) o;
-        return teamColor == chessGame.teamColor && Objects.equals(board, chessGame.board);
+    public String toString() {
+        return "ChessGame{" +
+                "teamColor=" + teamColor +
+                ", board=" + board +
+                ", previousMove=" + previousMove +
+                '}';
     }
 
-    @Override
-    public int hashCode() {
-        return Objects.hash(teamColor, board);
+    public ChessMove enPassantMove(TeamColor teamColor, ChessPosition startPosition) {
+        //if takes is it check?
+        ChessBoard board = getBoard();
+        ChessPiece thisPiece = board.getPiece(startPosition);
+        if (thisPiece == null) {
+            return null;
+        }
+        if(thisPiece.getPieceType() == ChessPiece.PieceType.PAWN && setUpMove() != null && thisPiece.getTeamColor() == teamColor){ //looks if it is a pawn
+            if(board.getPiece(setUpMove().getEndPosition()).getPieceType() == ChessPiece.PieceType.PAWN){ //looks to see if other piece is a move that just moved
+                if(setUpMove().getEndPosition().getColumn() == (startPosition.getColumn() + 1)  ||  setUpMove().getEndPosition().getColumn() == (startPosition.getColumn() - 1)){
+                    //Check columns beside it
+                    if(setUpMove().getStartPosition().getRow() == 2 && setUpMove().getEndPosition().getRow() == 4 && startPosition.getRow() == 4){ //if previous move was white
+                        //Check if it was starting position
+
+                        setEnPassantMove(new ChessMove(startPosition,new ChessPosition(setUpMove().getEndPosition().getRow() - 1, setUpMove().getEndPosition().getColumn()), null));
+                        return new ChessMove(startPosition,new ChessPosition(setUpMove().getEndPosition().getRow() - 1, setUpMove().getEndPosition().getColumn()), null);
+                    }
+                    if(setUpMove().getStartPosition().getRow() == 7 && setUpMove().getEndPosition().getRow() == 5 && startPosition.getRow() == 5){ //if previous move was black
+                        setEnPassantMove(new ChessMove(startPosition,new ChessPosition(setUpMove().getEndPosition().getRow() + 1, setUpMove().getEndPosition().getColumn()), null));
+                        return new ChessMove(startPosition,new ChessPosition(setUpMove().getEndPosition().getRow() + 1, setUpMove().getEndPosition().getColumn()), null);
+                    }
+                }
+            }
+            else{
+                return null; //stop looking otherwise
+            }
+        }
+        return null; // No moves found
+
     }
+
 
     /**
      * Makes a move in a chess game
@@ -115,12 +179,21 @@ public class ChessGame {
 
         if(validMoves.contains(move) && getBoard().getPiece(move.getStartPosition()).getTeamColor() == getTeamTurn()){
             ChessPiece movePiece = getBoard().getPiece(move.getStartPosition());
+
+            if(move.equals(getEnPassantMove())){
+                //take the pawn away if it was the enPassant move
+                System.out.println("here");
+                getBoard().addPiece(setUpMove().getEndPosition(), null) ;
+            }
             if(move.getPromotionPiece() != null){
                 movePiece = new ChessPiece(movePiece.getTeamColor(), move.getPromotionPiece());
                 //Put in the Promotion piece
             }
+
             getBoard().addPiece(move.getStartPosition(), null); //Remove piece
             getBoard().addPiece(move.getEndPosition(), movePiece); //Add piece
+
+            setSetUpMove(move);
             if(getTeamTurn() == TeamColor.WHITE){
                 setTeamTurn(TeamColor.BLACK); //If last move was White then go to Black
             }
@@ -132,14 +205,6 @@ public class ChessGame {
         else{
             throw new InvalidMoveException("Invalid move");
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ChessGame{" +
-                "teamColor=" + teamColor +
-                ", board=" + board +
-                '}';
     }
 
     /**
