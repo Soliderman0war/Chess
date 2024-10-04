@@ -16,6 +16,7 @@ public class ChessGame {
 
     public ChessGame() {
         board = new ChessBoard(); //Get Board
+        board.resetBoard(); //Put pieces in
         setTeamTurn(TeamColor.WHITE); //Set beginning to White
         teamColor = TeamColor.WHITE;
     }
@@ -212,18 +213,23 @@ public class ChessGame {
      */
     public boolean isInStalemate(TeamColor teamColor) {
         //use the valid move list but this team if the teamcolor is itself and check if it is empty
-        Collection<ChessMove> validMovesList = new ArrayList<>();
+        Collection<ChessMove> validMovesList;
         for(int i = 1; i <= 8; i ++){
             //rows
             for(int j = 1; j <= 8; j ++ ){
                 //columns
-                if(board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
-                    validMovesList.addAll(validMoves(new ChessPosition(i, j))); //add those moves to the list
+                ChessPosition myPosition = new ChessPosition(i, j);
+                ChessPiece piece = board.getPiece(myPosition);
+                if(piece != null && board.getPiece(new ChessPosition(i, j)).getTeamColor() == teamColor){
+                   validMovesList = validMoves(myPosition);
+                   if(validMovesList != null && !validMovesList.isEmpty()){
+                       return false;
+                   }
                 }
             }
         }
 
-        return validMovesList.isEmpty();
+        return true;
     }
 
     /**
