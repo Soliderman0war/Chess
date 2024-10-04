@@ -124,6 +124,9 @@ public class ChessGame {
             }
 
         }
+        else{
+            throw new InvalidMoveException("Invalid move");
+        }
     }
 
     @Override
