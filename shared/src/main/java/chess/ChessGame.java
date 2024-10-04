@@ -61,17 +61,17 @@ public class ChessGame {
 
         Collection<ChessMove> validMoves = new ArrayList<>();
         Collection<ChessMove> possibleMoves = thisPiece.pieceMoves(board, startPosition);
-
         for( ChessMove move : possibleMoves ) {
+            //If the piece moves does it check?
             ChessPiece phantomPiece = board.getPiece(move.getEndPosition());
-            board.addPiece(startPosition, null);
-            board.addPiece(move.getEndPosition(), phantomPiece);
+            board.addPiece(move.getStartPosition(), null); //remove to see
+            board.addPiece(move.getEndPosition(), thisPiece); //Place there to see if it blocks
             if(!isInCheck(thisPiece.getTeamColor())){
+//                System.out.println("Check");
                 validMoves.add(move);
             }
-            board.addPiece(move.getEndPosition(), phantomPiece);
-            board.addPiece(startPosition, thisPiece);
-
+            board.addPiece(move.getEndPosition(), phantomPiece); //places back the piece if wasn't null
+            board.addPiece(move.getStartPosition(), thisPiece);
         }
 
        return validMoves;
@@ -96,9 +96,6 @@ public class ChessGame {
 
         if(teamColor == getTeamTurn()){
             ChessPiece movePiece = getBoard().getPiece(move.getEndPosition());
-            if(movePiece.getTeamColor() != teamColor){
-                throw new InvalidMoveException("Invalid move"); //Can't move other peoples pieces as backup
-            }
             if(move.getPromotionPiece() != null){
                 movePiece = new ChessPiece(movePiece.getTeamColor(), move.getPromotionPiece());
                 //Put in the Promotion piece
@@ -115,6 +112,14 @@ public class ChessGame {
         }
     }
 
+    @Override
+    public String toString() {
+        return "ChessGame{" +
+                "teamColor=" + teamColor +
+                ", board=" + board +
+                '}';
+    }
+
     /**
      * Determines if the given team is in check
      *
@@ -125,14 +130,17 @@ public class ChessGame {
         //Check if King is in the other teamColor's moves
         //go through board and check for king
         ChessPosition myKing = null;
-        Collection<ChessMove> validMovesList = new ArrayList<>();
         for(int i = 1; i <= 8; i ++){
             //rows
             for(int j = 1; j <= 8; j ++ ){
                 //columns
-                if(ChessPiece.PieceType.KING == board.getPiece(new ChessPosition(i, j)).getPieceType() && teamColor == board.getPiece(new ChessPosition(i, j)).getTeamColor()){
-                    //Found king
-                    myKing = new ChessPosition(i, j);
+                if(board.getPiece(new ChessPosition(i, j)) != null){
+                    if(ChessPiece.PieceType.KING == board.getPiece(new ChessPosition(i, j)).getPieceType() && teamColor == board.getPiece(new ChessPosition(i, j)).getTeamColor()){
+                        //Found king
+                        myKing = new ChessPosition(i, j);
+//                        System.out.println(i + " " + j);
+                    }
+
                 }
             }
         }
@@ -142,19 +150,24 @@ public class ChessGame {
             //rows
             for(int j = 1; j <= 8; j ++ ){
                 //columns
-                if(board.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor){
-                    validMovesList.addAll(validMoves(new ChessPosition(i, j))); //add those moves to the list
+                ChessPiece piece = board.getPiece(new ChessPosition(i, j));
+                if(board.getPiece(new ChessPosition(i, j)) != null){
+                    if(board.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor){
+//                        System.out.println(i + " " + j);
+                        //check list
+                        for(ChessMove move : piece.pieceMoves(board, new ChessPosition(i, j))){
+                            if(move.getEndPosition().equals(myKing)){
+                                return true;
+                            }
+                        }
+                    }
+
                 }
             }
         }
 
         
-        //check list
-        for(ChessMove move : validMovesList){
-            if(move.getEndPosition() == myKing){
-                return true;
-            }
-        }
+
 
         return false; //the list doesn't have the king
 

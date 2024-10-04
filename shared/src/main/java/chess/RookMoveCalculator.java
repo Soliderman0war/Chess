@@ -59,7 +59,6 @@ public class RookMoveCalculator {
         Collection<ChessMove> upDownmoves = new ArrayList<>();
 
         for(int i = 0; i < rows.size(); i++){
-            System.out.println(rows.get(i));
             boolean within_bounds = row > 0 && row <= 8 && col > 0 && col <= 8;
             if(within_bounds){
                 if(board.getPiece(new ChessPosition(rows.get(i), col)) == null){
