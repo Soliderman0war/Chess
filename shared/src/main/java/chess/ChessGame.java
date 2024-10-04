@@ -14,10 +14,10 @@ public class ChessGame {
     private TeamColor teamColor;
     private ChessBoard board;
 
-    public ChessGame(TeamColor teamColor) {
+    public ChessGame() {
         board = new ChessBoard(); //Get Board
         setTeamTurn(TeamColor.WHITE); //Set beginning to White
-        this.teamColor = teamColor;
+        teamColor = TeamColor.WHITE;
     }
 
     /**
@@ -90,7 +90,7 @@ public class ChessGame {
      */
     public void makeMove(ChessMove move) throws InvalidMoveException {
         Collection<ChessMove> validMoves = validMoves(move.getStartPosition());
-        if (validMoves.isEmpty()) {
+        if (validMoves == null) {
             throw new InvalidMoveException("No valid move");
         }
 
