@@ -121,7 +121,39 @@ public class ChessGame {
      */
     public boolean isInCheck(TeamColor teamColor) {
         //Check if King is in the other teamColor's moves
-        //go through board and check each pieces
+        //go through board and check for king
+        ChessPosition myKing = null;
+        Collection<ChessMove> validMovesList= new ArrayList<>();
+        for(int i = 1; i <= 8; i ++){
+            //rows
+            for(int j = 1; j <= 8; j ++ ){
+                //columns
+                if(ChessPiece.PieceType.KING == board.getPiece(new ChessPosition(i, j)).getPieceType() && teamColor == board.getPiece(new ChessPosition(i, j)).getTeamColor()){
+                    //Found king
+                    myKing = new ChessPosition(i, j);
+                }
+            }
+        }
+
+        //go through board and get other pieces moves
+        for(int i = 1; i <= 8; i ++){
+            //rows
+            for(int j = 1; j <= 8; j ++ ){
+                //columns
+                if(board.getPiece(new ChessPosition(i, j)).getTeamColor() != teamColor){
+                    validMovesList.addAll(validMoves(new ChessPosition(i, j))); //add those moves to the list
+                }
+            }
+        }
+        
+        //check list
+        for(ChessMove move : validMovesList){
+            if(move.getEndPosition() == myKing){
+                return true;
+            }
+        }
+
+        return false; //the list doesn't have the king
 
 
     }
