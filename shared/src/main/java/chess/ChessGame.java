@@ -82,6 +82,19 @@ public class ChessGame {
     }
 
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ChessGame chessGame = (ChessGame) o;
+        return teamColor == chessGame.teamColor && Objects.equals(board, chessGame.board);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(teamColor, board);
+    }
+
     /**
      * Makes a move in a chess game
      *
@@ -94,8 +107,9 @@ public class ChessGame {
             throw new InvalidMoveException("No valid move");
         }
 
-        if(teamColor == getTeamTurn()){
-            ChessPiece movePiece = getBoard().getPiece(move.getEndPosition());
+
+        if(validMoves.contains(move) && teamColor == getTeamTurn()){
+            ChessPiece movePiece = getBoard().getPiece(move.getStartPosition());
             if(move.getPromotionPiece() != null){
                 movePiece = new ChessPiece(movePiece.getTeamColor(), move.getPromotionPiece());
                 //Put in the Promotion piece
@@ -184,19 +198,6 @@ public class ChessGame {
     public boolean isInCheckmate(TeamColor teamColor) {
         //Check if no valid moves (which is stalemate) and if it is in Check
         return isInCheck(teamColor) && isInStalemate(teamColor);
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ChessGame chessGame = (ChessGame) o;
-        return teamColor == chessGame.teamColor && Objects.equals(board, chessGame.board);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(teamColor, board);
     }
 
     /**
