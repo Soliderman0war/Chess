@@ -116,7 +116,7 @@ public class ChessGame {
 
 
 
-       return validMoves;
+        return validMoves;
 
 
 
@@ -182,8 +182,6 @@ public class ChessGame {
 
             if(move.equals(getEnPassantMove())){
                 //take the pawn away if it was the enPassant move
-
-                System.out.println("here");
                 getBoard().addPiece(setUpMove().getEndPosition(), null) ;
             }
             if(move.getPromotionPiece() != null){
@@ -254,7 +252,7 @@ public class ChessGame {
             }
         }
 
-        
+
 
 
         return false; //the list doesn't have the king
