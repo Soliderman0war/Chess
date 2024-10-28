@@ -1,6 +1,6 @@
 package service;
 
-import dataAccess.*;
+
 import dataaccess.AuthDAO;
 import dataaccess.DataAccessException;
 import dataaccess.UserDAO;
@@ -19,8 +19,8 @@ public class UserService {
         this.authDAO = authDAO;
     }
 
-    public AuthData register(UserData user) {
-        userDAO.create(user);
+    public AuthData register(UserData user) throws DataAccessException {
+        userDAO.registerUser(user);
         String uuid = UUID.randomUUID().toString();
         AuthData authData = new AuthData(user.username(), uuid);
         authDAO.addAuth(authData);
@@ -28,19 +28,23 @@ public class UserService {
         return authData;
     }
     public AuthData login(UserData user) throws DataAccessException {
-        if(userDAO.authenticateUser(user.username(),user.password())){
+        if(userDAO.authenticateUser(user.username(),user.password())) {
             String uuid = UUID.randomUUID().toString();
             AuthData authData = new AuthData(user.username(), uuid);
             authDAO.addAuth(authData);
             return authData;
         }
-        else{
-            //throw exception
-        }
+
+        return null;
 
     }
     public void logout(AuthData auth) {
         authDAO.getAuth(auth.authToken());
         authDAO.deleteAuth(auth.authToken());
+    }
+
+    public void clear() {
+        userDAO.clear();
+        authDAO.clear();
     }
 }
