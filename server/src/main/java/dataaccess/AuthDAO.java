@@ -4,7 +4,7 @@ import model.AuthData;
 
 public interface AuthDAO {
 
-    AuthData addAuth(AuthData authData);
+    void addAuth(AuthData authData);
 
     AuthData getAuth(String authToken);
 
