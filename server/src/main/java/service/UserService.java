@@ -17,6 +17,7 @@ public class UserService {
         this.authDAO = authDAO;
     }
 
+    //creates a user
     public AuthData createUser(UserData userData) throws DataAccessException {
         //positive case
         try{
@@ -27,7 +28,7 @@ public class UserService {
             throw new BadRequest(e.getMessage());
         }
 
-        //get random ID and create to put in db
+        //get random ID
         String authId = UUID.randomUUID().toString();
         AuthData authData = new AuthData(userData.username(), authId);
         authDAO.addAuth(authData);
@@ -35,6 +36,7 @@ public class UserService {
         return authData;
     }
 
+    //login a user with associated username and password
     public AuthData login(String username, String password) throws DataAccessException {
         //positive case
         boolean isUserCorrect = false;
@@ -59,30 +61,33 @@ public class UserService {
 
     }
 
-    public  void logout(String authToken) throws Unauthorized {
+    //logout a user by deleting associated AuthID
+    public  void logout(String authId) throws Unauthorized {
         //positive case
         try {
-            authDAO.getAuth(authToken);
+            authDAO.getAuth(authId);
         }
         //negative case
         catch (Unauthorized e) {
             throw new Unauthorized(e.getMessage());
         }
 
-        authDAO.deleteAuth(authToken);
+        authDAO.deleteAuth(authId);
     }
 
-    public AuthData getAuth(String authToken) throws Unauthorized {
+
+//retrieves an AuthId
+    public AuthData getAuth(String authId) throws Unauthorized {
         //positive case
         try{
-            return authDAO.getAuth(authToken);
+            return authDAO.getAuth(authId);
         }
-        //negative
+        //negative case
         catch (Unauthorized e) {
             throw new Unauthorized(e.getMessage());
         }
     }
-
+    //clears db
     public void clear(){
         userDAO.clear();
         authDAO.clear();
