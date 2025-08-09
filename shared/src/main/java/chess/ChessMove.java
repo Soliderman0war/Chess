@@ -46,11 +46,20 @@ public class ChessMove {
      * @return Type of piece to promote a pawn to, or null if no promotion
      */
     public ChessPiece.PieceType getPromotionPiece() {
-        //return if it needs to be promoted
+        //return type of promotion or null otherwise
         return promotionPiece;
     }
 
     //override
+
+    @Override
+    public String toString() {
+        return "ChessMove{" +
+                "startPosition=" + startPosition +
+                ", endPosition=" + endPosition +
+                ", promotionPiece=" + promotionPiece +
+                '}';
+    }
 
     @Override
     public boolean equals(Object o) {
