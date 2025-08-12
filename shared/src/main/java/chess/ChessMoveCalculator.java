@@ -1,10 +1,7 @@
 package chess;
 
-import org.junit.jupiter.params.shadow.com.univocity.parsers.common.beans.PropertyWrapper;
-
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.Objects;
 
 //Calculates any pieces move and returns Collection<ChessMove> set of moves
@@ -13,6 +10,7 @@ public class ChessMoveCalculator {
     private ChessBoard board;
     private ChessPosition myPosition;
     private ChessPosition currentPosition;
+    private ChessGame.TeamColor myColor;
     //initialize row and column
     private int row;
     private int col;
@@ -26,6 +24,7 @@ public class ChessMoveCalculator {
         //assign board and position
         this.board = board;
         this.myPosition = myPosition;
+        this.myColor = board.getPiece(myPosition).getTeamColor();
         //assign row and column values and new moveList
         this.row = myPosition.getRow();
         this.col = myPosition.getColumn();
@@ -65,18 +64,36 @@ public class ChessMoveCalculator {
                 //resets current position before starting a new direction
 
                 currentPosition = myPosition;
+                ChessPosition futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
+
 
                 //checks if the future move will be inbound
-                while (WithinBounds(DiagonalMove(x, y, currentPosition, myPosition).getEndPosition())) {
+                while (WithinBounds(futurePosition)) {
 
-                    //adds all diagonal moves
-                    moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                    //Continues as normal if position is null
+                    if(board.getPiece(futurePosition) == null){
+                        //adds all diagonal moves
+                        moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                        //move current position
+                        currentPosition = futurePosition;
+                        //the future position changes since the current changes
+                        futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
+                        System.out.println(futurePosition);
+                    }
+                    else {
+                        //find the blocking piece color
+                        ChessGame.TeamColor blockingPieceColor = board.getPiece(futurePosition).getTeamColor();
+                        System.out.println(blockingPieceColor);
+                        //can only move to this square if it is the opposing color
+                        if(myColor != blockingPieceColor){
+                            //add the move
+                            moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                        }
+                        //otherwise get out of the loop
+                        break;
 
-                    System.out.println("Row: " + DiagonalMove(x,y,currentPosition, myPosition).getEndPosition().getRow());
-                    System.out.println("Column: " + DiagonalMove(x,y,currentPosition, myPosition).getEndPosition().getColumn());
+                    }
 
-                    //move current position
-                    currentPosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
 
                     //debug codes
                     //System.out.println("Row: " + currentPosition.getRow());
@@ -85,6 +102,7 @@ public class ChessMoveCalculator {
                     //System.out.println(y);
                     //System.out.println("Row: " + DiagonalMove(x,y,currentPosition).getEndPosition().getRow());
                     //System.out.println("Column: " + DiagonalMove(x,y,currentPosition).getEndPosition().getColumn());
+                    //System.out.println(futurePosition);
 
 
                 }
@@ -111,10 +129,23 @@ public class ChessMoveCalculator {
     }
 
 
+    /*ensures piece is not stopped by another piece
+     and finds what color the piece is, however can't return two types
+     * */
+//    public ChessGame blockingPiece(ChessPosition currentPosition){
+//        if(board.getPiece(currentPosition).getTeamColor() == null){
+//            return null;
+//        }
+//        return board.getPiece(currentPosition).getTeamColor();
+//    }
+
+
     //returns current move list
     public Collection<ChessMove> getMoveList(){
         return moveList;
     }
+
+
 
 
 
