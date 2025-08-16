@@ -48,6 +48,9 @@ public class ChessMoveCalculator {
         if(type == ChessPiece.PieceType.KING){
             KingMoveCalculator();
         }
+        if(type == ChessPiece.PieceType.KNIGHT){
+            KnightMoveCalculator();
+        }
 
     }
 
@@ -137,6 +140,39 @@ public class ChessMoveCalculator {
         }
     }
 
+    //L shaped movement
+    private void KnightMoveCalculator(){
+        /* Positions
+         1,-2  1,2
+        -1,-2 -1,2
+         2,1   -2,1
+         2,-1  -2,-1
+         */
+
+        for(int i=-2; i<3; i+=4){
+            //rotate through i=-2 and i = 2
+            for(int j=-1; j<2; j+=2){
+                //rotate through j=-1 and j=1
+                currentPosition = myPosition;
+
+                System.out.println("i: " + i);
+                System.out.println("j: " + j);
+                //goes through each move by switching the position of i and j in the x and y positions
+                futurePosition = directionalMove(i, j, currentPosition, myPosition).getEndPosition();
+                singleMove(i, j, futurePosition);
+
+                futurePosition = directionalMove(j, i, currentPosition, myPosition).getEndPosition();
+                singleMove(j, i, futurePosition);
+
+            }
+        }
+
+
+
+
+
+    }
+
     //returns one move in a direction by adding the modifier to their current position but makes sure to hold the same position that was given
     public ChessMove directionalMove(int horizontalModifier, int verticalModifier, ChessPosition currentPosition, ChessPosition myPosition){
         if(type != ChessPiece.PieceType.PAWN){
@@ -198,7 +234,6 @@ public class ChessMoveCalculator {
                 //can only move to this square if it is the opposing color
                 if (myColor != blockingPieceColor) {
                     //add the move
-                    System.out.println("here");
                     moveList.add(directionalMove(x, y, currentPosition, myPosition));
                 }
             }
