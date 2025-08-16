@@ -37,14 +37,16 @@ public class ChessMoveCalculator {
 
         //Call the correct method by finding the type
         if(type == ChessPiece.PieceType.BISHOP){
-          BishopMoveCalculator();
+            BishopMoveCalculator();
         }
         if(type == ChessPiece.PieceType.ROOK){
             RookMoveCalculator();
         }
         if(type == ChessPiece.PieceType.QUEEN){
-            BishopMoveCalculator();
-            RookMoveCalculator();
+            QueenMoveCalculator();
+        }
+        if(type == ChessPiece.PieceType.KING){
+            KingMoveCalculator();
         }
 
     }
@@ -71,7 +73,7 @@ public class ChessMoveCalculator {
 
                 //Ensure future position is set before beginning
                 currentPosition = myPosition;
-                futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
+                futurePosition = directionalMove(x, y, currentPosition, myPosition).getEndPosition();
 
                 //call method
                 addMoves(x,y,futurePosition);
@@ -91,7 +93,7 @@ public class ChessMoveCalculator {
             //reset position each time
             currentPosition = myPosition;
             //reset future position
-            futurePosition = DiagonalMove(x, 0, currentPosition, myPosition).getEndPosition();
+            futurePosition = directionalMove(x, 0, currentPosition, myPosition).getEndPosition();
             //add the moves
             addMoves(x, 0, futurePosition);
         }
@@ -100,14 +102,43 @@ public class ChessMoveCalculator {
             //reset position each time
             currentPosition = myPosition;
             //reset future position
-            futurePosition = DiagonalMove(0, y, currentPosition, myPosition).getEndPosition();
+            futurePosition = directionalMove(0, y, currentPosition, myPosition).getEndPosition();
             //add the moves
             addMoves(0, y, futurePosition);
         }
     }
 
-    //returns one move diagonal by adding the modifier to their current position but makes sure to hold the same position that was given
-    public ChessMove DiagonalMove(int horizontalModifier, int verticalModifier, ChessPosition currentPosition, ChessPosition myPosition){
+    //Rook+Bishop
+    private void QueenMoveCalculator(){
+        BishopMoveCalculator();
+        RookMoveCalculator();
+    }
+    
+    //Rook + Bishop but only 1 space
+    private void KingMoveCalculator(){
+        /*Positions
+         -1,-1 -1,0 -1,1
+          0,-1  0,0  0,1
+          1,-1  1,0  1,1
+         */
+
+        for(int x=-1; x<2; x++){
+            //rotates through -1,0,1
+            for(int y=-1; y<2; y++){
+                //completes all the positions needed
+
+                //only one so use singleMove
+
+                currentPosition = myPosition;
+                futurePosition = directionalMove(x, y, currentPosition, myPosition).getEndPosition();
+                singleMove(x, y, futurePosition);
+
+            }
+        }
+    }
+
+    //returns one move in a direction by adding the modifier to their current position but makes sure to hold the same position that was given
+    public ChessMove directionalMove(int horizontalModifier, int verticalModifier, ChessPosition currentPosition, ChessPosition myPosition){
         if(type != ChessPiece.PieceType.PAWN){
             promotion = null;
         }
@@ -132,19 +163,18 @@ public class ChessMoveCalculator {
             //Continues as normal if position is null
             if (board.getPiece(futurePosition) == null) {
                 //adds all diagonal moves
-                moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                moveList.add(directionalMove(x, y, currentPosition, myPosition));
                 //move current position
                 currentPosition = futurePosition;
                 //the future position changes since the current changes
-                futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
-                System.out.println(futurePosition);
+                futurePosition = directionalMove(x, y, currentPosition, myPosition).getEndPosition();
             } else {
                 //find the blocking piece color
                 ChessGame.TeamColor blockingPieceColor = board.getPiece(futurePosition).getTeamColor();
                 //can only move to this square if it is the opposing color
                 if (myColor != blockingPieceColor) {
                     //add the move
-                    moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                    moveList.add(directionalMove(x, y, currentPosition, myPosition));
                 }
                 //otherwise get out of the loop
                 break;
@@ -153,37 +183,33 @@ public class ChessMoveCalculator {
         }
     }
 
-
-    /*ensures piece is not stopped by another piece
-     and finds what color the piece is, however can't return two types
-     * */
-//    public ChessGame blockingPiece(ChessPosition currentPosition){
-//        if(board.getPiece(currentPosition).getTeamColor() == null){
-//            return null;
-//        }
-//        return board.getPiece(currentPosition).getTeamColor();
-//    }
-
-
+    /*Instead of grabbing every move through a direction, just grabs one.
+    This is for the King, Knight, Pawn
+     */
+    public void singleMove(int x, int y, ChessPosition futurePosition) {
+        //need to do WithinBounds first otherwise getPiece will fail
+        if (WithinBounds(futurePosition)) {
+            if (board.getPiece(futurePosition) == null) {
+                //adds the directional move
+                moveList.add(directionalMove(x, y, currentPosition, myPosition));
+            } else {
+                //find the blocking piece color
+                ChessGame.TeamColor blockingPieceColor = board.getPiece(futurePosition).getTeamColor();
+                //can only move to this square if it is the opposing color
+                if (myColor != blockingPieceColor) {
+                    //add the move
+                    System.out.println("here");
+                    moveList.add(directionalMove(x, y, currentPosition, myPosition));
+                }
+            }
+        }
+    }
     //returns current move list
     public Collection<ChessMove> getMoveList(){
         return moveList;
     }
 
-
-
-
-
-    //Rooks Horizontal/Vertical
-    //Queen is Bishop and Rook combined
-    //King one space around
-    //Knights are L shaped
-    //Pawns move up 1 (possible two at beginning) and attack diagonal
-
-
     //override
-
-
     @Override
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) {
@@ -205,6 +231,6 @@ public class ChessMoveCalculator {
 //System.out.println("Column: " + currentPosition.getColumn());
 //System.out.println(x);
 //System.out.println(y);
-//System.out.println("Row: " + DiagonalMove(x,y,currentPosition).getEndPosition().getRow());
-//System.out.println("Column: " + DiagonalMove(x,y,currentPosition).getEndPosition().getColumn());
+//System.out.println("Row: " + directionalMove(x,y,currentPosition).getEndPosition().getRow());
+//System.out.println("Column: " + directionalMove(x,y,currentPosition).getEndPosition().getColumn());
 //System.out.println(futurePosition);
