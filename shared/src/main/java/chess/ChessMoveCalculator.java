@@ -42,6 +42,10 @@ public class ChessMoveCalculator {
         if(type == ChessPiece.PieceType.ROOK){
             RookMoveCalculator();
         }
+        if(type == ChessPiece.PieceType.QUEEN){
+            BishopMoveCalculator();
+            RookMoveCalculator();
+        }
 
     }
 
