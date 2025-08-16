@@ -57,7 +57,7 @@ public class ChessPiece {
      */
     public Collection<ChessMove> pieceMoves(ChessBoard board, ChessPosition myPosition) {
         //for now return null
-        return new ChessMoveCalculator(board,myPosition).BishopMoveCalculator();
+        return new ChessMoveCalculator(board,myPosition).getMoveList();
     }
 
     //Override

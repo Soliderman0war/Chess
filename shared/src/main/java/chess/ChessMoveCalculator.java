@@ -10,6 +10,7 @@ public class ChessMoveCalculator {
     private ChessBoard board;
     private ChessPosition myPosition;
     private ChessPosition currentPosition;
+    private ChessPosition futurePosition;
     private ChessGame.TeamColor myColor;
     //initialize row and column
     private int row;
@@ -35,10 +36,10 @@ public class ChessMoveCalculator {
         this.type = board.getPiece(myPosition).getPieceType();
 
         //Call the correct method by finding the type
-        //if(type == ChessPiece.PieceType.BISHOP){
-          //  BishopMoveCalculator();
-        //}
+        if(type == ChessPiece.PieceType.BISHOP){
+          BishopMoveCalculator();
 
+        }
 
     }
 
@@ -47,7 +48,7 @@ public class ChessMoveCalculator {
 
     //Have a calculator for each piece type
     //Bishops Diagonal
-    public Collection<ChessMove> BishopMoveCalculator(){
+    private void BishopMoveCalculator(){
         /* Move diagonal from the position
             Northwest -1,1
             Northeast 1,1
@@ -64,53 +65,20 @@ public class ChessMoveCalculator {
                 //resets current position before starting a new direction
 
                 currentPosition = myPosition;
-                ChessPosition futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
+                futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
 
-
+                //call method
                 //checks if the future move will be inbound
-                while (WithinBounds(futurePosition)) {
-
-                    //Continues as normal if position is null
-                    if(board.getPiece(futurePosition) == null){
-                        //adds all diagonal moves
-                        moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
-                        //move current position
-                        currentPosition = futurePosition;
-                        //the future position changes since the current changes
-                        futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
-                        System.out.println(futurePosition);
-                    }
-                    else {
-                        //find the blocking piece color
-                        ChessGame.TeamColor blockingPieceColor = board.getPiece(futurePosition).getTeamColor();
-                        System.out.println(blockingPieceColor);
-                        //can only move to this square if it is the opposing color
-                        if(myColor != blockingPieceColor){
-                            //add the move
-                            moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
-                        }
-                        //otherwise get out of the loop
-                        break;
-
-                    }
-
-
-                    //debug codes
-                    //System.out.println("Row: " + currentPosition.getRow());
-                    //System.out.println("Column: " + currentPosition.getColumn());
-                    //System.out.println(x);
-                    //System.out.println(y);
-                    //System.out.println("Row: " + DiagonalMove(x,y,currentPosition).getEndPosition().getRow());
-                    //System.out.println("Column: " + DiagonalMove(x,y,currentPosition).getEndPosition().getColumn());
-                    //System.out.println(futurePosition);
-
+                addMoves(x,y,futurePosition);
 
                 }
             }
         }
 
 
-        return moveList;
+
+    private void RookMoveCalculator(){
+
     }
 
     //returns one move diagonal by adding the modifier to their current position but makes sure to hold the same position that was given
@@ -126,6 +94,34 @@ public class ChessMoveCalculator {
      */
     public boolean WithinBounds(ChessPosition currentPosition){
         return (currentPosition.getRow() > 0 && currentPosition.getRow() < 9) && (currentPosition.getColumn() > 0 && currentPosition.getColumn()< 9);
+    }
+
+    public void addMoves(int x, int y, ChessPosition futurePosition) {
+        //checks if the future move will be inbound
+        while (WithinBounds(futurePosition)) {
+
+            //Continues as normal if position is null
+            if (board.getPiece(futurePosition) == null) {
+                //adds all diagonal moves
+                moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                //move current position
+                currentPosition = futurePosition;
+                //the future position changes since the current changes
+                futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
+                System.out.println(futurePosition);
+            } else {
+                //find the blocking piece color
+                ChessGame.TeamColor blockingPieceColor = board.getPiece(futurePosition).getTeamColor();
+                //can only move to this square if it is the opposing color
+                if (myColor != blockingPieceColor) {
+                    //add the move
+                    moveList.add(DiagonalMove(x, y, currentPosition, myPosition));
+                }
+                //otherwise get out of the loop
+                break;
+
+            }
+        }
     }
 
 
@@ -173,3 +169,13 @@ public class ChessMoveCalculator {
         return Objects.hash(board, myPosition, currentPosition, row, col, type, moveList, promotion);
     }
 }
+
+
+//debug codes
+//System.out.println("Row: " + currentPosition.getRow());
+//System.out.println("Column: " + currentPosition.getColumn());
+//System.out.println(x);
+//System.out.println(y);
+//System.out.println("Row: " + DiagonalMove(x,y,currentPosition).getEndPosition().getRow());
+//System.out.println("Column: " + DiagonalMove(x,y,currentPosition).getEndPosition().getColumn());
+//System.out.println(futurePosition);
