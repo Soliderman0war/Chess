@@ -38,7 +38,9 @@ public class ChessMoveCalculator {
         //Call the correct method by finding the type
         if(type == ChessPiece.PieceType.BISHOP){
           BishopMoveCalculator();
-
+        }
+        if(type == ChessPiece.PieceType.ROOK){
+            RookMoveCalculator();
         }
 
     }
@@ -62,23 +64,42 @@ public class ChessMoveCalculator {
             //x rotates through 1, -1
             for(int y = -1; y < 2; y+=2){
                 //y rotates through 1, -1
-                //resets current position before starting a new direction
 
+                //Ensure future position is set before beginning
                 currentPosition = myPosition;
                 futurePosition = DiagonalMove(x, y, currentPosition, myPosition).getEndPosition();
 
                 //call method
-                //checks if the future move will be inbound
                 addMoves(x,y,futurePosition);
 
                 }
             }
         }
 
-
-
+    //Rook Horizontal + Vertical
     private void RookMoveCalculator(){
+        //x = -1 or 1  y = 0
+        //x = 0 y = -1 or 1
+        //Ensure future position is set before beginning
 
+        for(int x =-1; x<2; x+=2) {
+            //x rotates through -1, 1
+            //reset position each time
+            currentPosition = myPosition;
+            //reset future position
+            futurePosition = DiagonalMove(x, 0, currentPosition, myPosition).getEndPosition();
+            //add the moves
+            addMoves(x, 0, futurePosition);
+        }
+        for(int y=-1; y<2; y+=2){
+            //y rotates through -1, 1
+            //reset position each time
+            currentPosition = myPosition;
+            //reset future position
+            futurePosition = DiagonalMove(0, y, currentPosition, myPosition).getEndPosition();
+            //add the moves
+            addMoves(0, y, futurePosition);
+        }
     }
 
     //returns one move diagonal by adding the modifier to their current position but makes sure to hold the same position that was given
@@ -96,6 +117,10 @@ public class ChessMoveCalculator {
         return (currentPosition.getRow() > 0 && currentPosition.getRow() < 9) && (currentPosition.getColumn() > 0 && currentPosition.getColumn()< 9);
     }
 
+
+    /*Moving through the board with the modifiers and
+    ensures it is not blocked or off the board
+     */
     public void addMoves(int x, int y, ChessPosition futurePosition) {
         //checks if the future move will be inbound
         while (WithinBounds(futurePosition)) {
