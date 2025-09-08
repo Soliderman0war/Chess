@@ -186,49 +186,89 @@ public class ChessMoveCalculator {
          */
         //if the pawn is white
         if(myColor == ChessGame.TeamColor.WHITE){
-            //if the row is 2 then move one or two 0,1 0,2
-            //able to attack so 1,1 or -1,1
+            currentPosition = myPosition;
+            //if the row is 2 then move one or two 1,0 2,0
             if(myPosition.getRow() == 2){
-                currentPosition = myPosition;
 
                 for(int i = 1; i < 3; i++){
-                    futurePosition = directionalMove(0,i, currentPosition, myPosition).getEndPosition();
-                    singleMove(0,i,futurePosition);
+                    futurePosition = directionalMove(i,0, currentPosition, myPosition).getEndPosition();
+                    //breaks out if blocked
+                    if(board.getPiece(futurePosition) == null){
+                        singleMove(i,0,futurePosition);
+                    }
+                    else{
+                        break;
+                    }
+
                 }
 
-                //if there is a piece to attack
-                for(int j = -1; j < 2; j+=2){
-                    futurePosition = directionalMove(j,1, currentPosition, myPosition).getEndPosition();
-                    singleMove(j,1,futurePosition);
-                }
             }
-            //otherwise one move 0,1
-            //still able to attack 1,1 or -1,1
+            //otherwise one move 1,0
             else{
 
-                futurePosition = directionalMove(0,1, currentPosition, myPosition).getEndPosition();
-                singleMove(0,1,futurePosition);
-
-
-                for(int j = -1; j < 2; j+=2){
-                    futurePosition = directionalMove(j,1, currentPosition, myPosition).getEndPosition();
-                    singleMove(j,1,futurePosition);
-                }
+                futurePosition = directionalMove(1,0, currentPosition, myPosition).getEndPosition();
+                singleMove(1,0,futurePosition);
 
             }
-
-
+            //able to attack so 1,-1 or 1,1
+            //if there is a piece to attack and within bounds
+            for(int j = -1; j < 2; j+=2) {
+                        futurePosition = directionalMove(1, j, currentPosition, myPosition).getEndPosition();
+                        //check withinbounds then piece because it normally goes to if a piece is not there
+                        if(WithinBounds(futurePosition)) {
+                            if (board.getPiece(futurePosition) != null) {
+                                singleMove(1, -1, futurePosition);
+                            }
+                        }
+            }
         }
 
 
+        if(ChessGame.TeamColor.BLACK == myColor){
+            currentPosition = myPosition;
+            //if the row is 7 then move one or two -1,0 -2,0
+            if(myPosition.getRow() == 7){
+
+                for(int i = -1; i > -3; i--){
+                    futurePosition = directionalMove(i,0, currentPosition, myPosition).getEndPosition();
+                    //breaks out if blocked
+                    if(board.getPiece(futurePosition) == null){
+                        singleMove(i,0,futurePosition);
+                    }
+                    else{
+                        break;
+                    }
+                }
+
+            }
+            //otherwise one move 1,0
+            else{
+                futurePosition = directionalMove(-1,0, currentPosition, myPosition).getEndPosition();
+                singleMove(-1,0,futurePosition);
+
+            }
+            //able to attack so -1,-1 or -1,1
+            //if there is a piece to attack and within bounds
+            for(int j = -1; j < 2; j+=2) {
+                futurePosition = directionalMove(-1, j, currentPosition, myPosition).getEndPosition();
+                //check withinbounds then piece because it normally goes to if a piece is not there
+                if(WithinBounds(futurePosition)) {
+                    if (board.getPiece(futurePosition) != null) {
+                        singleMove(-1, j, futurePosition);
+                    }
+                }
+            }
+        }
     }
 
+
+
     //returns one move in a direction by adding the modifier to their current position but makes sure to hold the same position that was given
-    public ChessMove directionalMove(int horizontalModifier, int verticalModifier, ChessPosition currentPosition, ChessPosition myPosition){
+    public ChessMove directionalMove(int verticalModifier, int horizontalModifier, ChessPosition currentPosition, ChessPosition myPosition){
         if(type != ChessPiece.PieceType.PAWN){
             promotion = null;
         }
-        return new ChessMove(myPosition, new ChessPosition(currentPosition.getRow() + horizontalModifier, currentPosition.getColumn() + verticalModifier), promotion);
+        return new ChessMove(myPosition, new ChessPosition(currentPosition.getRow() + verticalModifier, currentPosition.getColumn() + horizontalModifier), promotion);
     }
 
     /*ensures each piece is still moving within the bounds of a chess board
