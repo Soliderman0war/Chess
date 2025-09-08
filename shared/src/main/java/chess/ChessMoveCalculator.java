@@ -334,6 +334,15 @@ public class ChessMoveCalculator {
         return moveList;
     }
 
+    //returns all promotion list
+    public void createPromotionList(int verticalModifier, int horizontalModifier, ChessPosition currentPosition, ChessPosition myPosition){
+        moveList.add(new ChessMove(myPosition, new ChessPosition(currentPosition.getRow() + verticalModifier, currentPosition.getColumn() + horizontalModifier), ChessPiece.PieceType.BISHOP));
+        moveList.add(new ChessMove(myPosition, new ChessPosition(currentPosition.getRow() + verticalModifier, currentPosition.getColumn() + horizontalModifier), ChessPiece.PieceType.QUEEN));
+        moveList.add(new ChessMove(myPosition, new ChessPosition(currentPosition.getRow() + verticalModifier, currentPosition.getColumn() + horizontalModifier), ChessPiece.PieceType.ROOK));
+        moveList.add(new ChessMove(myPosition, new ChessPosition(currentPosition.getRow() + verticalModifier, currentPosition.getColumn() + horizontalModifier), ChessPiece.PieceType.KNIGHT));
+
+    }
+
     //override
     @Override
     public boolean equals(Object o) {
