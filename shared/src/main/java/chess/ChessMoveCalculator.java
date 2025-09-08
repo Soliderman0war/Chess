@@ -51,6 +51,9 @@ public class ChessMoveCalculator {
         if(type == ChessPiece.PieceType.KNIGHT){
             KnightMoveCalculator();
         }
+        if(type == ChessPiece.PieceType.PAWN){
+            PawnMoveCalculator();
+        }
 
     }
 
@@ -155,8 +158,6 @@ public class ChessMoveCalculator {
                 //rotate through j=-1 and j=1
                 currentPosition = myPosition;
 
-                System.out.println("i: " + i);
-                System.out.println("j: " + j);
                 //goes through each move by switching the position of i and j in the x and y positions
                 futurePosition = directionalMove(i, j, currentPosition, myPosition).getEndPosition();
                 singleMove(i, j, futurePosition);
@@ -169,6 +170,55 @@ public class ChessMoveCalculator {
 
 
 
+
+
+    }
+
+    /*
+    Pawn movements are as follows:
+    1 move forward Unless the beginning space then they can move 2 spaces
+    Attack move is diagonal in front of them
+     */
+    private void PawnMoveCalculator(){
+        /*2 moves at beginning, (row =7 for black pawns, row = 2 for white pawns)
+        attack diagonally
+        able to promote at the end
+         */
+        //if the pawn is white
+        if(myColor == ChessGame.TeamColor.WHITE){
+            //if the row is 2 then move one or two 0,1 0,2
+            //able to attack so 1,1 or -1,1
+            if(myPosition.getRow() == 2){
+                currentPosition = myPosition;
+
+                for(int i = 1; i < 3; i++){
+                    futurePosition = directionalMove(0,i, currentPosition, myPosition).getEndPosition();
+                    singleMove(0,i,futurePosition);
+                }
+
+                //if there is a piece to attack
+                for(int j = -1; j < 2; j+=2){
+                    futurePosition = directionalMove(j,1, currentPosition, myPosition).getEndPosition();
+                    singleMove(j,1,futurePosition);
+                }
+            }
+            //otherwise one move 0,1
+            //still able to attack 1,1 or -1,1
+            else{
+
+                futurePosition = directionalMove(0,1, currentPosition, myPosition).getEndPosition();
+                singleMove(0,1,futurePosition);
+
+
+                for(int j = -1; j < 2; j+=2){
+                    futurePosition = directionalMove(j,1, currentPosition, myPosition).getEndPosition();
+                    singleMove(j,1,futurePosition);
+                }
+
+            }
+
+
+        }
 
 
     }
@@ -260,12 +310,16 @@ public class ChessMoveCalculator {
     }
 }
 
+/*
+debug codes
+System.out.println("Row: " + currentPosition.getRow());
+System.out.println("Column: " + currentPosition.getColumn());
+System.out.println(x);
+System.out.println(y);
+System.out.println("Row: " + directionalMove(x,y,currentPosition).getEndPosition().getRow());
+System.out.println("Column: " + directionalMove(x,y,currentPosition).getEndPosition().getColumn());
+System.out.println(futurePosition);
+System.out.println("i: " + i);
+System.out.println("j: " + j);
 
-//debug codes
-//System.out.println("Row: " + currentPosition.getRow());
-//System.out.println("Column: " + currentPosition.getColumn());
-//System.out.println(x);
-//System.out.println(y);
-//System.out.println("Row: " + directionalMove(x,y,currentPosition).getEndPosition().getRow());
-//System.out.println("Column: " + directionalMove(x,y,currentPosition).getEndPosition().getColumn());
-//System.out.println(futurePosition);
+ */
