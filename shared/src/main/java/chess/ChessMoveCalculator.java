@@ -203,11 +203,19 @@ public class ChessMoveCalculator {
                 }
 
             }
-            //otherwise one move 1,0
+            //otherwise one move 1,0 and no piece blocking
             else{
 
                 futurePosition = directionalMove(1,0, currentPosition, myPosition).getEndPosition();
-                singleMove(1,0,futurePosition);
+                //make sure there is no piece no matter what
+                if(WithinBounds(futurePosition)) {
+                    if (board.getPiece(futurePosition) == null&& futurePosition.getRow() != 8) {
+                        singleMove(1, 0, futurePosition);
+                    }
+                    else if(board.getPiece(futurePosition) == null && futurePosition.getRow() == 8){
+                        createPromotionList(1,0, currentPosition, myPosition);
+                    }
+                }
 
             }
             //able to attack so 1,-1 or 1,1
@@ -216,8 +224,11 @@ public class ChessMoveCalculator {
                         futurePosition = directionalMove(1, j, currentPosition, myPosition).getEndPosition();
                         //check withinbounds then piece because it normally goes to if a piece is not there
                         if(WithinBounds(futurePosition)) {
-                            if (board.getPiece(futurePosition) != null) {
-                                singleMove(1, -1, futurePosition);
+                            if (board.getPiece(futurePosition) != null&& futurePosition.getRow() != 8) {
+                                singleMove(1, j, futurePosition);
+                            }
+                            else if(board.getPiece(futurePosition) != null && futurePosition.getRow() == 8){
+                                createPromotionList(1,j, currentPosition, myPosition);
                             }
                         }
             }
@@ -244,17 +255,29 @@ public class ChessMoveCalculator {
             //otherwise one move 1,0
             else{
                 futurePosition = directionalMove(-1,0, currentPosition, myPosition).getEndPosition();
-                singleMove(-1,0,futurePosition);
+                //make sure there is no piece no matter what
+                if(WithinBounds(futurePosition)) {
+                    //if it promotes then call the promotion list
+                    if (board.getPiece(futurePosition) == null && futurePosition.getRow() != 1) {
+                        singleMove(-1, 0, futurePosition);
+                    }
+                    else if(board.getPiece(futurePosition) == null && futurePosition.getRow() == 1){
+                        createPromotionList(-1,0, currentPosition, myPosition);
+                    }
+                }
 
             }
             //able to attack so -1,-1 or -1,1
             //if there is a piece to attack and within bounds
             for(int j = -1; j < 2; j+=2) {
                 futurePosition = directionalMove(-1, j, currentPosition, myPosition).getEndPosition();
-                //check withinbounds then piece because it normally goes to if a piece is not there
+                //check withinbounds then piece because it normally goes to if a piece is not there, same promotion idea as the moving forward
                 if(WithinBounds(futurePosition)) {
-                    if (board.getPiece(futurePosition) != null) {
+                    if (board.getPiece(futurePosition) != null && futurePosition.getRow() != 1) {
                         singleMove(-1, j, futurePosition);
+                    }
+                    else if(board.getPiece(futurePosition) != null && futurePosition.getRow() == 1){
+                        createPromotionList(-1,j, currentPosition, myPosition);
                     }
                 }
             }
